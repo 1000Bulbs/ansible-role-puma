@@ -1,0 +1,66 @@
+# Ansible
+.ansible
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+.cache/
+*.sqlite3
+.ruff_cache
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+*.env
+
+# Ansible-specific
+*.retry
+*.log
+*.tar.gz
+*.orig
+*.vault_pass
+*.secret
+group_vars/*/*.vault.yml
+host_vars/*/*.vault.yml
+*.pem
+*.key
+secrets/
+vault_pass.txt
+
+# Molecule
+.molecule/
+molecule/*/inventory/
+molecule/*/instance_config.yml
+molecule/*/provisioner_inventory.yml
+
+# Testinfra / pytest
+.pytest_cache/
+.testinfra_inventory.yml
+*.tox/
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+.tox/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*~
+
+# System files
+.DS_Store
+Thumbs.db

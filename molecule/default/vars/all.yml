@@ -1,0 +1,3 @@
+# molecule/default/vars/all.yml
+---
+test_file: /etc

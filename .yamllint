@@ -1,0 +1,41 @@
+# .yamllint
+---
+extends: default
+
+rules:
+  # Ansible-friendly comments
+  comments:
+    min-spaces-from-content: 1
+
+  # better to fully disable, avoids false positives
+  comments-indentation: disable
+
+  # Avoid false positives with Jinja + YAML expressions
+  braces:
+    max-spaces-inside: 1
+    # softer enforcement to avoid false errors with Jinja templates
+    level: warning
+
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
+
+  # disable line length validation
+  line-length: disable
+
+  # Prevent YAML gotchas (yes/no/on/off)
+  quoted-strings:
+    # recommended by yamllint to avoid over-quoting
+    required: only-when-needed
+
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+
+  trailing-spaces: enable
+
+  # ensures `---` at the top of each file
+  document-start: enable
+
+  empty-lines:
+    max: 1

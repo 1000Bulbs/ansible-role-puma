@@ -1,0 +1,15 @@
+# molecule/default/converge.yml
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      register: apt_cache_update
+      when: ansible_os_family == "Debian"
+
+  roles:
+    - { role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}" }

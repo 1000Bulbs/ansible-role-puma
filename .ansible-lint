@@ -1,0 +1,4 @@
+---
+skip_list:
+  # disable line length validation
+  - yaml[line-length]

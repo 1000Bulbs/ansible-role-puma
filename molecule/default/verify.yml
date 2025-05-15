@@ -1,0 +1,16 @@
+# molecule/default/verify.yml
+---
+- name: Verify
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Set MOLECULE_DISTRO from environment (if defined)
+      ansible.builtin.set_fact:
+        molecule_distro: "{{ lookup('env', 'MOLECULE_DISTRO') | default('ubuntu-2204', true) }}"
+
+    - name: Run pytest
+      delegate_to: localhost
+      ansible.builtin.command:
+        cmd: >
+          pytest --connection=docker --hosts={{ molecule_distro }} molecule/default/tests
+      changed_when: false

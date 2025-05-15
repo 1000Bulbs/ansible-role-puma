@@ -1,0 +1,19 @@
+# meta/main.yml
+---
+dependencies: []
+
+galaxy_info:
+  namespace: okb
+  role_name: puma
+
+  author: Fernando Aleman
+  description: Role for okb.puma
+  license: MIT
+
+  min_ansible_version: "2.13"
+
+  platforms:
+    - name: Ubuntu
+      version:
+        - "2204"
+        - "2404"
