@@ -1,3 +1,4 @@
 # molecule/default/vars/all.yml
 ---
-test_file: /etc
+puma_dir: /etc/puma
+puma_user: deploy

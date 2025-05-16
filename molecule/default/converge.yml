@@ -11,5 +11,13 @@
       register: apt_cache_update
       when: ansible_os_family == "Debian"
 
+    - name: Create deploy user
+      ansible.builtin.user:
+        name: deploy
+        createhome: true
+        home: /home/deploy
+        shell: /bin/bash
+        state: present
+
   roles:
     - { role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}" }

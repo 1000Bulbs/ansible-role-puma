@@ -1,2 +1,9 @@
 # tasks/main.yml
 ---
+- name: Create puma directory
+  ansible.builtin.file:
+    path: "{{ puma_dir }}"
+    state: directory
+    owner: "{{ puma_user }}"
+    group: "{{ puma_user }}"
+    mode: "0755"
