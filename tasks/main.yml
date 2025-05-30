@@ -15,3 +15,14 @@
     owner: "{{ puma_user }}"
     group: "{{ puma_user }}"
     mode: "0644"
+
+- name: Ensure puma systemd unit file
+  vars:
+    systemd_unit_name: "{{ puma_name }}"
+    systemd_unit_type: "{{ puma_systemd_unit_type }}"
+    systemd_unit_file: "{{ puma_systemd_unit_file }}"
+    systemd_unit_generic_options: "{{ puma_systemd_unit_generic_options }}"
+    systemd_unit_options: "{{ puma_systemd_unit_options }}"
+    systemd_unit_install_options: "{{ puma_systemd_unit_install_options }}"
+  ansible.builtin.include_role:
+    name: okb.systemd_unit

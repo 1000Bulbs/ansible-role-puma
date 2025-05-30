@@ -1,4 +1,5 @@
 # molecule/default/tests/test_default.py
+puma_name = "puma"
 puma_user = "deploy"
 puma_config_dir = "/etc/puma"
 puma_config_file = "/etc/puma/puma.rb"
@@ -7,6 +8,8 @@ puma_bind = "unix:///var/www/html/puma.sock"
 puma_pidfile = "/var/www/html/puma.pid"
 puma_state_path = "/var/www/html/puma.state"
 puma_activate_control_app = "unix:///var/www/html/pumactl.sock"
+puma_systemd_unit_type = "service"
+puma_systemd_unit_file = f"/etc/systemd/system/{puma_name}.{puma_systemd_unit_type}"
 
 
 def test_puma_config_dir_exists(host):
@@ -35,3 +38,24 @@ def test_puma_config_file_exists(host):
         f'activate_control_app "{puma_activate_control_app}", {{ no_token: true }}'
         in content
     )
+
+
+def test_puma_systemd_unit_file_contents(host):
+    f = host.file(puma_systemd_unit_file)
+    content = f.content_string
+    assert "[Unit]" in content
+    assert "Description=Puma web server" in content
+    assert "After=network.target" in content
+    assert "[Service]" in content
+    assert "ExecStart = /usr/local/bin/puma -C /etc/puma/puma.rb" in content
+    assert "ExecStop = /usr/local/bin/pumactl -F /etc/puma/puma.rb stop" in content
+    assert (
+        "ExecReload = /usr/local/bin/pumactl -F /etc/puma/puma.rb phased-restart"
+        in content
+    )
+    assert "User = deploy" in content
+    assert "Group = deploy" in content
+    assert "WorkingDirectory = /var/www/html" in content
+    assert "Restart = always" in content
+    assert "[Install]" in content
+    assert "WantedBy=multi-user.target" in content

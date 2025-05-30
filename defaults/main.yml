@@ -1,5 +1,8 @@
 # defaults/main.yml
 ---
+# Puma name
+puma_name: puma
+
 # System user that will run the Puma process
 puma_user: deploy
 
@@ -52,3 +55,60 @@ puma_error_log_file: "{{ puma_dir }}/log/puma-error.log"
 
 # Whether to enable `prune_bundler` to clean up unused gem references after a restart
 puma_prune_bundler_enabled: true
+
+# Type of the systemd unit.
+puma_systemd_unit_type: service
+
+# Default directory for systemd unit files.
+puma_systemd_unit_directory: /etc/systemd/system
+
+# Full path for the systemd unit file, constructed using the directory, unit name, and type.
+puma_systemd_unit_file: "{{ puma_systemd_unit_directory }}/{{ puma_name }}.{{ puma_systemd_unit_type }}"
+
+# Generic options for systemd units, applied regardless of the unit type.
+puma_systemd_unit_generic_options:
+  - Description=Puma web server
+  - After=network.target
+
+# Path to the Puma executable binary
+puma_binary: /usr/local/bin/puma
+
+# Command to start Puma via systemd unit
+puma_systemd_unit_exec_start: "{{ puma_binary }} -C {{ puma_config_file }}"
+
+# Path to the pumactl control utility binary
+puma_ctl_binary: /usr/local/bin/pumactl
+
+# Command to stop Puma via systemd unit
+puma_systemd_unit_exec_stop: "{{ puma_ctl_binary }} -F {{ puma_config_file }} stop"
+
+# Command to reload (restart) Puma via systemd unit
+puma_systemd_unit_exec_reload: "{{ puma_ctl_binary }} -F {{ puma_config_file }} phased-restart"
+
+# Restart policy for the Puma systemd unit
+puma_systemd_unit_restart: always
+
+# Specific options for the systemd unit, dependent on the unit type and configuration.
+puma_systemd_unit_options:
+  - Type = simple
+  - ExecStart = {{ puma_systemd_unit_exec_start }}
+  - ExecStop = {{ puma_systemd_unit_exec_stop }}
+  - ExecReload = {{ puma_systemd_unit_exec_reload }}
+  - User = {{ puma_user }}
+  - Group = {{ puma_user }}
+  - WorkingDirectory = {{ puma_dir }}
+  - Restart = {{ puma_systemd_unit_restart }}
+  - PIDFile = {{ puma_pidfile }}
+
+# Options related to the 'Install' section of a systemd unit file.
+puma_systemd_unit_install_options:
+  - WantedBy=multi-user.target
+
+  # Name of the systemd service.
+puma_systemd_service_name: "{{ puma_name }}"
+
+# Whether or not the systemd service is enabled.
+puma_systemd_service_enabled: true
+
+# The systemd service state.
+puma_systemd_service_state: started

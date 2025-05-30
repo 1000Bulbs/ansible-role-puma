@@ -1,3 +1,7 @@
 # molecule/default/requirements.yml
 ---
-roles: []
+roles:
+  - name: okb.systemd_unit
+    src: https://github.com/1000bulbs/ansible-role-systemd_unit.git
+    scm: git
+    version: master
