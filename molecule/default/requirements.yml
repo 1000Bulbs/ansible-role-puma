@@ -1,7 +1,15 @@
 # molecule/default/requirements.yml
 ---
+collections:
+  - name: community.general
+
 roles:
   - name: okb.systemd_unit
     src: https://github.com/1000bulbs/ansible-role-systemd_unit.git
+    scm: git
+    version: master
+
+  - name: okb.systemd_service
+    src: https://github.com/1000bulbs/ansible-role-systemd_service.git
     scm: git
     version: master

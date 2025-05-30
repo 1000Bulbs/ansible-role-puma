@@ -83,6 +83,9 @@ jobs:
       - name: Install molecule dependencies
         run: make install-molecule-deps
 
+      - name: Install community.general collection
+        run: ansible-galaxy collection install community.general
+
       - name: Run molecule tests
         run: make test
         env:

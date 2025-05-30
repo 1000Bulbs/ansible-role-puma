@@ -18,3 +18,52 @@
         home: /home/deploy
         shell: /bin/bash
         state: present
+
+    - name: Create puma directories
+      loop:
+        - /var/www/html
+        - /var/www/html/log
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: deploy
+        group: deploy
+        mode: "0755"
+
+    - name: Create app.rb for minimal Rack app
+      ansible.builtin.copy:
+        dest: /var/www/html/app.rb
+        owner: deploy
+        group: deploy
+        mode: '0644'
+        content: |
+          class HelloApp
+            def call(env)
+              [200, { 'Content-Type' => 'text/plain' }, ["Hello from Puma!"]]
+            end
+          end
+
+    - name: Create config.ru for Puma
+      ansible.builtin.copy:
+        dest: /var/www/html/config.ru
+        owner: deploy
+        group: deploy
+        mode: '0644'
+        content: |
+          require './app'
+          run HelloApp.new
+
+    - name: Ensure dependencies are installed for Puma
+      ansible.builtin.apt:
+        name:
+          - ruby-full
+          - build-essential
+          - zlib1g-dev
+        state: present
+        update_cache: true
+
+    - name: Install Puma gem globally
+      community.general.gem:
+        name: puma
+        state: present
+        user_install: false # This ensures it installs system-wide, matching /usr/local/bin/puma

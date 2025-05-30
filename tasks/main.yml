@@ -26,3 +26,11 @@
     systemd_unit_install_options: "{{ puma_systemd_unit_install_options }}"
   ansible.builtin.include_role:
     name: okb.systemd_unit
+
+- name: Ensure puma systemd service
+  vars:
+    systemd_service_name: "{{ puma_name }}"
+    systemd_service_enabled: "{{ puma_systemd_service_enabled }}"
+    systemd_service_state: "{{ puma_systemd_service_state }}"
+  ansible.builtin.include_role:
+    name: okb.systemd_service

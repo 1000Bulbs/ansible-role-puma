@@ -10,6 +10,7 @@ puma_state_path = "/var/www/html/puma.state"
 puma_activate_control_app = "unix:///var/www/html/pumactl.sock"
 puma_systemd_unit_type = "service"
 puma_systemd_unit_file = f"/etc/systemd/system/{puma_name}.{puma_systemd_unit_type}"
+puma_systemd_service_name = "puma"
 
 
 def test_puma_config_dir_exists(host):
@@ -59,3 +60,13 @@ def test_puma_systemd_unit_file_contents(host):
     assert "Restart = always" in content
     assert "[Install]" in content
     assert "WantedBy=multi-user.target" in content
+
+
+def test_puma_service_is_enabled(host):
+    svc = host.service(puma_systemd_service_name)
+    assert svc.is_enabled
+
+
+def test_puma_service_is_running(host):
+    svc = host.service(puma_systemd_service_name)
+    assert svc.is_running
