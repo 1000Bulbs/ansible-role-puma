@@ -1,7 +1,54 @@
 # defaults/main.yml
 ---
-# Directory where Puma configuration and state files are stored
-puma_config_dir: /etc/puma
-
 # System user that will run the Puma process
 puma_user: deploy
+
+# Directory where Puma configuration is stored
+puma_config_dir: /etc/puma
+
+# File where Puma configuration is stored
+puma_config_file: "{{ puma_config_dir }}/puma.rb"
+
+# Root directory of the deployed Rails application
+puma_dir: /var/www/html
+
+# The environment in which Puma will run (e.g., development, staging, production)
+puma_env: production
+
+# Whether to enable preload_app! in the Puma config for Copy-On-Write memory savings
+puma_preload_app_enabled: true
+
+# Number of Puma worker processes.
+# Leave blank to have this set automatically based on the number of server CPUs.
+puma_workers: "{{ ((ansible_processor_vcpus // 2) | int) if ansible_processor_vcpus > 1 else 1 }}"
+
+# Number of threads per Puma worker.
+# Leave blank to have this set automatically based on the number of server CPUs.
+puma_threads: "{{ (puma_workers | int) + 1 }}"
+
+# The socket that Puma will bind to for accepting requests
+puma_bind: unix://{{ puma_dir }}/puma.sock
+
+# File where Puma will write its PID (process ID)
+puma_pidfile: "{{ puma_dir }}/puma.pid"
+
+# File where Puma will store its state (for use with phased restarts, etc.)
+puma_state_path: "{{ puma_dir }}/puma.state"
+
+# Whether to enable Puma's control app for phased restarts and monitoring
+puma_activate_control_app_enabled: true
+
+# Path to Puma's control socket for pumactl commands
+puma_activate_control_app: unix://{{ puma_dir }}/pumactl.sock
+
+# Token used to authenticate requests to the Puma control app
+puma_activate_control_app_token: "no_token: true"
+
+# File where Puma will write standard log output
+puma_log_file: "{{ puma_dir }}/log/puma.log"
+
+# File where Puma will write error log output
+puma_error_log_file: "{{ puma_dir }}/log/puma-error.log"
+
+# Whether to enable `prune_bundler` to clean up unused gem references after a restart
+puma_prune_bundler_enabled: true

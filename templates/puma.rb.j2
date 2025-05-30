@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+
+directory "{{ puma_dir }}"
+
+environment ENV.fetch("RAILS_ENV") { "{{ puma_env }}" }
+{% if puma_preload_app_enabled %}
+
+preload_app!
+{% endif %}
+
+workers ENV.fetch("WEB_CONCURRENCY") { {{ puma_workers }} }
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { {{ puma_threads }} }
+threads threads_count, threads_count
+
+bind "{{ puma_bind }}"
+pidfile "{{ puma_pidfile }}"
+state_path "{{ puma_state_path }}"
+{% if puma_activate_control_app_enabled %}
+activate_control_app "{{ puma_activate_control_app }}", { {{ puma_activate_control_app_token }} }
+{% endif %}
+stdout_redirect "{{ puma_log_file }}", "{{ puma_error_log_file }}"
+{% if puma_prune_bundler_enabled %}
+
+prune_bundler
+{% endif %}
+{% if puma_preload_app_enabled %}
+
+on_worker_boot do
+  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+end
+{% endif %}

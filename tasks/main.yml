@@ -7,3 +7,11 @@
     owner: "{{ puma_user }}"
     group: "{{ puma_user }}"
     mode: "0755"
+
+- name: Ensure puma config file
+  ansible.builtin.template:
+    src: puma.rb.j2
+    dest: "{{ puma_config_file }}"
+    owner: "{{ puma_user }}"
+    group: "{{ puma_user }}"
+    mode: "0644"
