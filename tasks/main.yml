@@ -1,2 +1,9 @@
 # tasks/main.yml
 ---
+- name: Ensure puma config directory
+  ansible.builtin.file:
+    path: "{{ puma_config_dir }}"
+    state: directory
+    owner: "{{ puma_user }}"
+    group: "{{ puma_user }}"
+    mode: "0755"

@@ -1,2 +1,7 @@
 # defaults/main.yml
 ---
+# Directory where Puma configuration and state files are stored
+puma_config_dir: /etc/puma
+
+# System user that will run the Puma process
+puma_user: deploy
